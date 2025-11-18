@@ -1,0 +1,116 @@
+﻿1. User Flow & Screen Descriptions
+This outlines the user's journey from their first visit to becoming a regular user.
+Screen 1: Sign Up / Sign In Page
+* Purpose: This is the entry gate to the app. It's handled by Supabase Auth.
+* UI Components:
+   * Tabs for "Sign In" and "Sign Up".
+   * Sign Up: Fields for Email and Password. A "Sign Up" button.
+   * Sign In: Fields for Email and Password. A "Sign In" button.
+   * A "Forgot Password?" link.
+Screen 2: First-Time User Profile Setup
+* Purpose: To capture the user's "Digital Persona" info. This screen is shown only once after their first sign-up and login.
+* Trigger: The app checks if the user's occupation field in their profile is empty.
+* UI Components:
+   * Title: "Welcome! Let's set up your profile."
+   * Subtitle: "This helps us understand your 'Digital Persona' to give you accurate peer comparisons."
+   * Form:
+      * Occupation (Dropdown: "Student", "Employed", "Self-employed")
+      * Work Mode (Dropdown: "Remote", "Hybrid", "In-person")
+      * Age (Number Input)
+      * Gender (Dropdown: "Male", "Female", "Other")
+   * Button: "Save Profile and Continue"
+* Action: When clicked, this data is saved to the users table in Supabase, linked to their auth ID.
+Screen 3: The Dashboard (Main App Screen)
+* Purpose: This is the home screen. It has two states:
+   * The "Check-in" form (to submit new data).
+   * The "Results" view (showing their latest analysis).
+* UI Components:
+   * Navigation Bar: "Dashboard" | "History" | "Profile" | "Sign Out"
+   * View 1: The "New Check-in" Form (This is the default view)
+      * Title: "How are you feeling this week?"
+      * Form:
+         * Average Sleep (per night): Slider (4-10 hours)
+         * Sleep Quality (last 7 days): 1-5 Star Rating
+         * Exercise (last 7 days): Number Input ("minutes")
+         * Social Time (last 7 days): Number Input ("hours")
+         * Leisure Screen Time (avg. per day): Number Input ("hours")
+      * Button: "Analyze My Wellness →"
+   * View 2: The "Results" Dashboard (Appears after clicking "Analyze")
+      * Section 1: Burnout Risk (from the Logistic Regression model)
+         * "Your 'Unproductive Overwork' Risk: 75% (High)"
+      * Section 2: Prioritized Action (from the model's logic)
+         * "Your #1 Actionable Insight: Our model shows your Sleep Quality (1/5) is the strongest driver of your risk. Focus on this first."
+      * Section 3: Peer Group Benchmark (from the Supabase DB)
+         * Title: "How You Compare (vs. 'Remote Students')"
+         * Productivity: You (70) vs. Peer Avg (45)
+         * Stress: You (5.5) vs. Peer Avg (8.1)
+         * Wellness: You (65) vs. Peer Avg (35)
+Screen 4: History Page (Optional but good)
+* Purpose: To show the user their progress over time.
+* UI Components:
+   * A line chart showing their mental_wellness_index_0_100 (or productivity_0_100) from every check-in over the last 30 days.
+   * A table of all their past check-in submissions.
+Screen 5: Profile Page
+* Purpose: To allow users to update their "Digital Persona."
+* UI Components:
+   * The same form from Screen 2 ("First-Time User Profile Setup").
+   * A "Save Changes" button.
+   * (This is crucial for when a "Student" graduates and becomes "Employed").
+________________
+
+
+2. Supabase Database Structure
+This is the core of your persistent data, using Supabase (PostgreSQL).
+Table 1: users
+* Purpose: Stores the user's static "Persona" data. It is linked 1-to-1 with Supabase's built-in auth.users table.
+* Row-Level Security (RLS): Users can only see and edit their own row.
+* Columns:
+   * id (uuid, Primary Key): This MUST be a foreign key to auth.users.id. This is how you link your auth to your data.
+   * created_at (timestamp with time zone)
+   * email (text): (Copied from auth for easy reference)
+   * occupation (text): (e.g., "Student")
+   * work_mode (text): (e.g., "Remote")
+   * age (integer)
+   * gender (text)
+Table 2: check_ins
+* Purpose: Stores a historical log of every wellness check-in for every user. This is a "one-to-many" relationship (1 user has many check-ins).
+* RLS: Users can only see their own check-ins.
+* Columns:
+   * id (bigint, Primary Key): Auto-incrementing number.
+   * user_id (uuid, Foreign Key): Links to users.id. This is essential.
+   * created_at (timestamp with time zone): The time of the check-in.
+   * sleep_hours (float)
+   * sleep_quality_1_5 (integer)
+   * exercise_minutes_per_week (integer)
+   * social_hours_per_week (float)
+   * leisure_screen_hours (float)
+   * calculated_risk_score (integer): (Optional, but good to store the model's output).
+Table 3: persona_benchmarks (The "Peer Group" Data)
+* Purpose: This table stores the pre-calculated averages from your original CSV. This is the key to the peer comparison. This is a read-only table for the app.
+* RLS: All authenticated users can read this table.
+* How to create: You run your Python script once, calculate all the averages, and upload this to Supabase one time.
+* Columns:
+   * id (bigint, Primary Key): Auto-incrementing.
+   * occupation (text): (e.g., "Student")
+   * work_mode (text): (e.g., "Remote")
+   * avg_stress (float): (e.g., 8.1)
+   * avg_productivity (float): (e.g., 45.5)
+   * avg_mental_wellness (float): (e.g., 12.0)
+   * count (integer): (e.g., 45 - the number of people in this group).
+________________
+
+
+3. End-to-End Data Flow (The "Analyze" Button)
+When a user clicks "Analyze My Wellness":
+1. Frontend (UI): Gathers all data from the "Check-in" form.
+2. Frontend (Auth): Gets the user's id from supabase.auth.getUser().
+3. Frontend (DB Write):
+   * It saves the check-in form data to the check_ins table in Supabase, tagging it with the user_id.
+4. Frontend (API Call 1 - Risk):
+   * The app also sends all the form data (sleep, exercise, etc.) plus the user's profile data (occupation, age, etc.) to your Logistic Regression API (e.g., hosted on Heroku or as a Supabase Edge Function).
+   * The API returns the risk_score (e.g., 75%) and the actionable_insight (e.g., "Improve sleep").
+5. Frontend (DB Read - Peers):
+   * The app looks at the user's profile: occupation is "Student", work_mode is "Remote".
+   * It queries the persona_benchmarks table in Supabase: SELECT * FROM persona_benchmarks WHERE occupation = 'Student' AND work_mode = 'Remote' LIMIT 1.
+   * Supabase instantly returns the row with all the peer averages: { avg_stress: 8.1, avg_productivity: 45.5, ... }.
+6. Frontend (Render): The app now has all the data it needs. It hides the form and displays the "Results" dashboard (View 2) to the user, populating it with the risk_score, actionable_insight, and the avg_... peer data.
