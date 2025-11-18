@@ -1,0 +1,268 @@
+            {/* Peer Group Benchmarking */}
+            {dashboardData.peerBenchmark && dashboardData.userProfile && (
+              <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/40 dark:border-gray-800">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Peer Group Comparison</h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      How you compare with {dashboardData.peerBenchmark.count} {dashboardData.userProfile.work_mode} {dashboardData.userProfile.occupation}s
+                    </p>
+                  </div>
+                  <div className="px-4 py-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+                    <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">Your Peer Group</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Burnout Risk Comparison */}
+                  <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/10 dark:to-orange-900/10 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Burnout Risk</h3>
+                      <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-gray-600 dark:text-gray-400">You</span>
+                          <span className="font-bold text-gray-900 dark:text-white">{dashboardData.weekStats.avgRisk}%</span>
+                        </div>
+                        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full transition-all duration-500 ${
+                              dashboardData.weekStats.avgRisk < 30
+                                ? 'bg-green-500'
+                                : dashboardData.weekStats.avgRisk < 60
+                                ? 'bg-yellow-500'
+                                : 'bg-red-500'
+                            }`}
+                            style={{ width: `${dashboardData.weekStats.avgRisk}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-gray-600 dark:text-gray-400">Peer Avg</span>
+                          <span className="font-bold text-gray-900 dark:text-white">{((dashboardData.peerBenchmark.avg_stress / 10) * 100).toFixed(0)}%</span>
+                        </div>
+                        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-indigo-500 transition-all duration-500"
+                            style={{ width: `${(dashboardData.peerBenchmark.avg_stress / 10) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          {dashboardData.weekStats.avgRisk < (dashboardData.peerBenchmark.avg_stress / 10) * 100
+                            ? `✓ ${Math.abs(dashboardData.weekStats.avgRisk - (dashboardData.peerBenchmark.avg_stress / 10) * 100).toFixed(0)}% better than peers`
+                            : `${Math.abs(dashboardData.weekStats.avgRisk - (dashboardData.peerBenchmark.avg_stress / 10) * 100).toFixed(0)}% higher than peers`
+                          }
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Productivity Comparison */}
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Productivity Index</h3>
+                      <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-gray-600 dark:text-gray-400">Estimated (You)</span>
+                          <span className="font-bold text-gray-900 dark:text-white">
+                            {Math.max(0, Math.min(100, 100 - dashboardData.weekStats.avgRisk)).toFixed(0)}/100
+                          </span>
+                        </div>
+                        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-green-500 transition-all duration-500"
+                            style={{ width: `${Math.max(0, 100 - dashboardData.weekStats.avgRisk)}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-gray-600 dark:text-gray-400">Peer Avg</span>
+                          <span className="font-bold text-gray-900 dark:text-white">{dashboardData.peerBenchmark.avg_productivity.toFixed(0)}/100</span>
+                        </div>
+                        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-indigo-500 transition-all duration-500"
+                            style={{ width: `${dashboardData.peerBenchmark.avg_productivity}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          {(100 - dashboardData.weekStats.avgRisk) > dashboardData.peerBenchmark.avg_productivity
+                            ? `✓ ${Math.abs((100 - dashboardData.weekStats.avgRisk) - dashboardData.peerBenchmark.avg_productivity).toFixed(0)} points above peers`
+                            : `${Math.abs((100 - dashboardData.weekStats.avgRisk) - dashboardData.peerBenchmark.avg_productivity).toFixed(0)} points below peers`
+                          }
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mental Wellness Comparison */}
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 rounded-2xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Mental Wellness</h3>
+                      <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-gray-600 dark:text-gray-400">Estimated (You)</span>
+                          <span className="font-bold text-gray-900 dark:text-white">
+                            {Math.max(0, Math.min(100, 100 - dashboardData.weekStats.avgRisk + (dashboardData.weekStats.avgSleep >= 7 ? 10 : 0))).toFixed(0)}/100
+                          </span>
+                        </div>
+                        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-blue-500 transition-all duration-500"
+                            style={{ width: `${Math.max(0, Math.min(100, 100 - dashboardData.weekStats.avgRisk + (dashboardData.weekStats.avgSleep >= 7 ? 10 : 0)))}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-gray-600 dark:text-gray-400">Peer Avg</span>
+                          <span className="font-bold text-gray-900 dark:text-white">{dashboardData.peerBenchmark.avg_mental_wellness.toFixed(0)}/100</span>
+                        </div>
+                        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-indigo-500 transition-all duration-500"
+                            style={{ width: `${dashboardData.peerBenchmark.avg_mental_wellness}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          {(100 - dashboardData.weekStats.avgRisk + (dashboardData.weekStats.avgSleep >= 7 ? 10 : 0)) > dashboardData.peerBenchmark.avg_mental_wellness
+                            ? `✓ ${Math.abs((100 - dashboardData.weekStats.avgRisk + (dashboardData.weekStats.avgSleep >= 7 ? 10 : 0)) - dashboardData.peerBenchmark.avg_mental_wellness).toFixed(0)} points above peers`
+                            : `${Math.abs((100 - dashboardData.weekStats.avgRisk + (dashboardData.weekStats.avgSleep >= 7 ? 10 : 0)) - dashboardData.peerBenchmark.avg_mental_wellness).toFixed(0)} points below peers`
+                          }
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* AI-Powered Insights */}
+            <div className="bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 dark:from-purple-900/10 dark:via-indigo-900/10 dark:to-blue-900/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-purple-100 dark:border-purple-800/30">
+              <div className="flex items-start gap-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">AI-Powered Insights</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Personalized recommendations based on your data and peer benchmarks</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {/* Insight 1: Risk Analysis */}
+                <div className="bg-white/60 dark:bg-gray-900/60 rounded-xl p-6 border border-white/60 dark:border-gray-700/60">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Risk Assessment</h3>
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
+                        {dashboardData?.weekStats.avgRisk > 70
+                          ? "🚨 Your burnout risk is critically high. Immediate action recommended: reduce work hours, prioritize sleep, and consider professional support."
+                          : dashboardData?.weekStats.avgRisk > 50
+                          ? "⚠️ Your burnout risk is elevated. Focus on improving sleep quality, increasing physical activity, and setting clearer work-life boundaries."
+                          : dashboardData?.weekStats.avgRisk > 30
+                          ? "✅ Your burnout risk is moderate. Maintain current healthy habits and monitor stress levels to prevent escalation."
+                          : "🌟 Excellent! Your burnout risk is low. Keep up the great work with your wellness routine and balanced lifestyle."
+                        }
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Insight 2: Sleep Analysis */}
+                <div className="bg-white/60 dark:bg-gray-900/60 rounded-xl p-6 border border-white/60 dark:border-gray-700/60">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Sleep Optimization</h3>
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
+                        {dashboardData?.weekStats.avgSleep < 6
+                          ? `😴 You're significantly sleep-deprived (averaging ${dashboardData.weekStats.avgSleep}h). Aim for 7-9 hours nightly. Poor sleep directly increases burnout risk by 40-60%.`
+                          : dashboardData?.weekStats.avgSleep < 7
+                          ? `💤 You're getting ${dashboardData?.weekStats.avgSleep}h of sleep. Try adding 30-60 minutes to reach the optimal 7-9 hour range for better recovery and focus.`
+                          : dashboardData?.weekStats.avgSleep < 9
+                          ? `✨ Great sleep habits! Averaging ${dashboardData?.weekStats.avgSleep}h is within the optimal range. This significantly reduces your burnout risk.`
+                          : `⏰ You're sleeping more than 9 hours (${dashboardData?.weekStats.avgSleep}h avg). While rest is important, excessive sleep may indicate underlying fatigue or health issues.`
+                        }
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Insight 3: Peer Comparison */}
+                {dashboardData?.peerBenchmark && (
+                  <div className="bg-white/60 dark:bg-gray-900/60 rounded-xl p-6 border border-white/60 dark:border-gray-700/60">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Peer Benchmark Analysis</h3>
+                        <p className="text-sm text-gray-700 dark:text-gray-300">
+                          {dashboardData.weekStats.avgRisk < (dashboardData.peerBenchmark.avg_stress / 10) * 100
+                            ? `🎯 You're performing ${Math.abs(dashboardData.weekStats.avgRisk - (dashboardData.peerBenchmark.avg_stress / 10) * 100).toFixed(0)}% better than your peer group (${dashboardData.peerBenchmark.count} ${dashboardData.userProfile?.work_mode} ${dashboardData.userProfile?.occupation}s). Your wellness strategies are working!`
+                            : `📊 Your burnout risk is ${Math.abs(dashboardData.weekStats.avgRisk - (dashboardData.peerBenchmark.avg_stress / 10) * 100).toFixed(0)}% higher than peers. Consider adopting habits from successful ${dashboardData.userProfile?.work_mode} ${dashboardData.userProfile?.occupation}s: consistent sleep schedules, regular breaks, and social activities.`
+                          }
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Insight 4: Action Items */}
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold mb-2">Today's Action Plan</h3>
+                      <ul className="text-sm space-y-1 opacity-90">
+                        {dashboardData?.weekStats.avgSleep < 7 && <li>• Set a bedtime alarm for 9-10 PM tonight to improve sleep</li>}
+                        {dashboardData?.weekStats.avgRisk > 50 && <li>• Schedule a 15-minute break every 2 hours during work</li>}
+                        <li>• Take a 10-minute walk outdoors for mental clarity</li>
+                        {!dashboardData?.todayCheckIn && <li>• Complete your daily check-in to track progress</li>}
+                        <li>• Reach out to a friend or colleague for social connection</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
