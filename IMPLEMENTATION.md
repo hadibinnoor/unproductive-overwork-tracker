@@ -126,24 +126,6 @@ View:
   - Detailed check-ins table
 ```
 
-## 🎨 Design Features
-
-### Visual Design
-- **Gradient backgrounds**: Purple-pink for peer comparison
-- **Progress bars**: Visual comparison with peer averages
-- **Color coding**: 
-  - Green for low risk (< 30%)
-  - Yellow for moderate risk (30-60%)
-  - Red for high risk (> 60%)
-- **Dark mode**: Full support across all new components
-
-### UX Improvements
-- **Responsive layout**: Mobile-first design
-- **Loading states**: Spinners and skeleton loaders
-- **Empty states**: Helpful messages when no data exists
-- **Smooth animations**: Page transitions and hover effects
-- **Accessibility**: ARIA labels and keyboard navigation
-
 ## 🔧 Technical Details
 
 ### State Management

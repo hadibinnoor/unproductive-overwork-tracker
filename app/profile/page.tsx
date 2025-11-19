@@ -269,7 +269,7 @@ export default function ProfilePage() {
               <select
                 value={form.occupation}
                 onChange={handleChange("occupation")}
-                className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
+                className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
                 required
               >
                 <option value="" disabled>
@@ -288,7 +288,7 @@ export default function ProfilePage() {
               <select
                 value={form.workMode}
                 onChange={handleChange("workMode")}
-                className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
+                className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
                 required
               >
                 <option value="" disabled>
@@ -322,7 +322,7 @@ export default function ProfilePage() {
                 <select
                   value={form.gender}
                   onChange={handleChange("gender")}
-                  className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-transparent px-4 py-3 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
+                  className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500"
                   required
                 >
                   <option value="" disabled>

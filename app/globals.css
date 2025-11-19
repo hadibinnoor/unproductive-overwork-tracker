@@ -73,3 +73,46 @@ body {
 .page-transition.page-exit {
   animation: pageSlideOut 0.2s ease-in forwards;
 }
+
+/* Dark mode styles for select elements and dropdowns */
+select {
+  background-color: transparent;
+  color: inherit;
+}
+
+select option {
+  background-color: white;
+  color: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  select {
+    background-color: transparent;
+    color: white;
+  }
+  
+  select option {
+    background-color: #1f2937;
+    color: white;
+  }
+}
+
+/* Dark mode for autocomplete dropdowns */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  -webkit-text-fill-color: inherit !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@media (prefers-color-scheme: dark) {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #111827 inset !important;
+    -webkit-text-fill-color: white !important;
+  }
+}
