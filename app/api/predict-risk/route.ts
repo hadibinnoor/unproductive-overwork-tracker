@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Get API URL from environment variable or use default
-    const apiUrl = process.env.RISK_API_URL || process.env.NEXT_PUBLIC_RISK_API_URL || "http://127.0.0.1:5000/predict_risk";
+    const apiUrl = process.env.LOGISTIC_RISK_API_URL || "http://127.0.0.1:5000/predict_risk";
 
     console.log("Proxying request to:", apiUrl);
     console.log("Payload:", body);
