@@ -1342,7 +1342,7 @@ export default function DashboardPage() {
 
       {/* Results Modal */}
       {showResults && riskResult && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-4">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 py-4 pt-8 overflow-y-auto">
           <div className="w-full max-w-3xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col max-h-[90vh]">
             {/* Header */}
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex-shrink-0">
@@ -1606,7 +1606,7 @@ export default function DashboardPage() {
 
       {/* Daily Check-in Modal */}
       {showCheckin && !showResults && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-4">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 py-4 pt-8 overflow-y-auto">
           <div className="w-full max-w-3xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col max-h-[90vh]">
             {/* Header */}
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex-shrink-0">
